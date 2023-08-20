@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
-from .models import Profile
+from .models import Profile, Meep
 # Register your models here.
 
 # Removing Group model
@@ -19,6 +19,6 @@ class UserAdmin(admin.ModelAdmin):
 # Only keeping the username field and deleting everything else
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-# admin.site.register(Profile)
+admin.site.register(Meep)
 
 

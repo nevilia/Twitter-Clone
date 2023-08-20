@@ -5,6 +5,14 @@
         <div class="row">
             <div class="col-8">
                 <h1>{{profile.user.username}}'s Profile</h1>
+                <br>
+                {% if meeps %}
+                    {% for meep in meeps %}
+                    <div class="alert alert-dark" role="alert">
+                        {{ meep }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="col-4">
                 <div class="card">

@@ -1,6 +1,12 @@
 {% extends 'base.html' %} 
 
 {% block content %}
- <h1>Hello World</h1>
+    <h1>Meeps!</h1>
+    <br>
+    {% for meep in meeps %}
+        <div class="alert alert-dark" role="alert">
+            {{ meep }}
+        </div>
+    {% endfor %}
 {% endblock content %}
 
