@@ -1,13 +1,27 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from .models import Profile, Meep
+from .forms import MeepForm
 
 # Create your views here.
 def home(request):
     if request.user.is_authenticated:
-        meeps = Meep.objects.all().order_by("-created_at")
+        form = MeepForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                meep = form.save(commit=False) # dont save yet
+                meep.user = request.user # save for specific user only
+                meep.save() # save finally
+                messages.success(request, ("Your Meep has been Posted!"))
 
-    return render(request, 'home.html', {"meeps":meeps})
+                return redirect('home')
+        
+        
+        meeps = Meep.objects.all().order_by("-created_at")
+        return render(request, 'home.html', {"meeps":meeps, "form":form})
+    else:
+        meeps = Meep.objects.all().order_by("-created_at")
+        return render(request, 'home.html', {"meeps":meeps})
 
 def profile_list(request):
     if request.user.is_authenticated:
