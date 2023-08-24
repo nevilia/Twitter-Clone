@@ -47,7 +47,11 @@
                         <button class="btn btn-outline-success" name="follow" value="follow" type="submit">Follow @{{ profile.user.username|lower }}</button>
                     {% endif %}
                 </form>
-
+                <br>
+                {% comment %} if we are the logges in user at our own profile page {% endcomment %}
+                {% if request.user.id == profile.user.id %}
+                    <a href="{% url 'update_user' %}" class="btn btn-outline-secondary">Update Profile</a>
+                {% endif %}
 
             </div>
         </div>
