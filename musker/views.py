@@ -3,6 +3,8 @@ from django.contrib import messages
 from .models import Profile, Meep
 from .forms import MeepForm
 
+from django.contrib.auth import authenticate,login, logout
+
 # Create your views here.
 def home(request):
     if request.user.is_authenticated:
@@ -57,3 +59,24 @@ def profile(request, pk):
     else:
         messages.success(request, ("You Must Be Logged In!"))
         return redirect('home')
+    
+def login_user(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, ("Welcome Back!"))
+            return redirect('home')
+        else:
+            messages.success(request, ("There was an error logging you in."))
+            return redirect('login')
+    else:
+        return render(request, "login.html", {})
+    
+    
+def logout_user(request):
+    logout(request)
+    messages.success(request, "You have been Logged Out.")
+    return redirect("home")
