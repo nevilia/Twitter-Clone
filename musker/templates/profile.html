@@ -20,6 +20,13 @@
                 {% endif %}
             </div>
             <div class="col-4">
+                <br><br>
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }} " style = "width: 120px; height:120px" alt="">
+                    {% comment %} profile.profile_image is going to show us the adress only.to get the correct url use .url . That's why now we can pass it in img src {% endcomment %}
+                    <br><br>
+                {% endif %}
+                
                 <div class="card">
                     <h5 class="card-header">Follows</h5>
                     <div class="card-body">
