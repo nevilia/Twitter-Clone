@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from .models import Profile, Meep
-from .forms import MeepForm, SignUpForm
+from .forms import MeepForm, SignUpForm, ProfilePicForm
 
 from django.contrib.auth import authenticate,login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -106,14 +106,18 @@ def register_user(request):
 def update_user(request):
     if request.user.is_authenticated:
         current_user = User.objects.get(id=request.user.id)
-        form = SignUpForm(request.POST or None, instance=current_user) # Take all of current users info and pass in the form
-        if form.is_valid():
-            form.save()
+        profile_user = Profile.objects.get(user_id=request.user.id)
+        
+        user_form = SignUpForm(request.POST or None, request.FILES or None, instance=current_user) # Take all of current users info and pass in the form
+        profile_form = ProfilePicForm(request.POST or None, request.FILES or None, instance=profile_user)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
             login(request, current_user)
             messages.success(request, ('Your Profile has been updated')) # Might come up with an error "username already exists". this was made for Django 4.1.4 and won't fall into this error
             return redirect('home')
 
-        return render(request, "update_user.html", {'form':form})
+        return render(request, "update_user.html", {'user_form':user_form, 'profile_form':profile_form})
     else:
         messages.success(request, ('You Must be Logged In'))
         return redirect('home')
