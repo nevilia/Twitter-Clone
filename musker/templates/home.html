@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-
+{% load static %}
 {% block content %}
 
 <div class="container text-center">
@@ -10,13 +10,26 @@
             <br>
             {% for meep in meeps %}
                 <div class="alert alert-dark" role="alert">
-                    <b>{{ meep.body }}</b><br>
-                    
-                    <small class="text-muted">
-                        {{ meep.created_at }} By
-                        @{{ meep.user.username }}
-                    </small>
-                    
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-1">
+                                {% if meep.user.profile.profile_image %} {% comment %} meep model has a user field which is a foreign key to profile model {% endcomment %}
+                                    <img src="{{ meep.user.profile.profile_image.url }}" width=50 height=50 class="rounded-circle" alt="{{ profile.user.username }}">
+                                    {% else %}
+                                        <img src="{% static 'images/profile_icon.jpg' %}" width=50 height=50 class="rounded-circle" alt="{{ profile.user.username }}">
+                                {% endif %}
+                            </div>
+                        
+                            <div class="col-10">
+                                <b>{{ meep.body }}</b><br>
+                                
+                                <small class="text-muted">
+                                    {{ meep.created_at }} By
+                                    @{{ meep.user.username }}
+                                </small>
+                            </div>    <br><br>
+                        </div>
+                    </div>
                 </div><br>
 
             {% endfor %}
