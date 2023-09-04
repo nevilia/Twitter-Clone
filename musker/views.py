@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from .models import Profile, Meep
 from .forms import MeepForm, SignUpForm, ProfilePicForm
@@ -122,3 +122,26 @@ def update_user(request):
         messages.success(request, ('You Must be Logged In'))
         return redirect('home')
     
+    
+def meep_like(request, pk):
+    if request.user.is_authenticated:
+        meep = get_object_or_404(Meep, id=pk)
+        if meep.likes.filter(id = request.user.id):
+                # if a user has already liked it and clicks again, it must mean unlike rather than simply incrementing the count
+            meep.likes.remove(request.user)
+        else:
+            meep.likes.add(request.user)
+        # this is essentially redirecting us to the current page. we can access what page we are on as following
+        return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        messages.success(request, ("You must be logged in!"))
+        return redirect('home')
+    
+def meep_share(request, pk):
+    meep = get_object_or_404(Meep, id=pk)
+    if meep:
+        return render(request, "share_meep.html", {'meep':meep})
+        
+    else:
+        messages.success(request, ("That Meep doesn't exist"))
+        return redirect('home')

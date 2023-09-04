@@ -9,7 +9,13 @@ class Meep(models.Model):
     )
     body = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(User, related_name="meep_like", blank=True)
     
+    
+    # Keep count of likes
+    def number_of_likes(self):
+        return self.likes.count()
+        
     def __str__(self):
         return(f"{self.user}"
                f"({self.created_at:%Y-%m-%d %H:%M}): "
